@@ -14,9 +14,14 @@ import java.net.URL;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -30,7 +35,7 @@ public class LivestreamController {
     @Value("${app.streamserver.ip}")
     private String streamServerIp;
     
-    @GetMapping("/")
+    @GetMapping("/watch")
     @ResponseStatus(HttpStatus.OK)
     public void stream(HttpServletResponse response,
                     //    @RequestParam String token,
@@ -72,7 +77,7 @@ public class LivestreamController {
         }
     }
 
-    @GetMapping("/{streamKeyFile}")
+    @GetMapping("/watch/{streamKeyFile}")
     public void streaming(HttpServletResponse response,
                     //    @RequestParam String token,
                        @PathVariable String streamKeyFile) {
@@ -98,6 +103,17 @@ public class LivestreamController {
             // e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
+    }
+    
+    @PostMapping("/validate")
+    public ResponseEntity<String> validateSteamKey(@RequestBody MultiValueMap<String, String> rtmpBody) {
+        System.out.println(rtmpBody.getFirst("name"));
+        // Logic to validate stream key from a database or in-memory store
+        if (livestreamManager.isValidStreamKey(rtmpBody.getFirst("name"))) {
+            return ResponseEntity.ok("Valid stream key");
+        }
+        
+        return ResponseEntity.status(403).body("Invalid stream key");
     }
     
 }
