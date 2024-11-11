@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "app.streamserver.ip",
+  "type": "java.lang.String",
+  "description": "Ip address for nginx server"
+}]}
