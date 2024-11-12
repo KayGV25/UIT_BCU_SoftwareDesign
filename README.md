@@ -62,6 +62,10 @@ rtmp {
 ```bash
 sudo ufw allow 1935/tcp
 ```
+- Check the Nginx config file syntax
+```bash
+sudo nginx -t
+```
 - Reload Nginx with changes
 ```bash
 sudo systemctl reload nginx.service
