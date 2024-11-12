@@ -72,7 +72,7 @@ sudo systemctl reload nginx.service
 ```
 
 ## Setting your JAVA SPRING BOOT server
-### If you are pulling this hole project to use
+### If you are pulling this whole project to use
 - The only thing you need to change is the application.properties in the resource folder
     - Change the streamserver.ip to your rtmp server ip
 
