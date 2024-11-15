@@ -112,6 +112,8 @@ public class LivestreamController {
     }
     
     
+    // For validation from rtmp server
+    // Check if the streaming key is in the database
     @PostMapping("/validate")
     public ResponseEntity<String> validateSteamKey(@RequestBody MultiValueMap<String, String> rtmpBody) {
         System.out.println(rtmpBody.getFirst("name"));

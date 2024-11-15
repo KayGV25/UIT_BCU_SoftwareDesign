@@ -89,6 +89,7 @@ public class LivestreamManager {
 
     protected boolean isValidStreamKey(String streamKey) {
         // TODO: Implement stream key validation
+        // Check the database for streaming key
         return true; // Replace with actual validation logic
     }
 }
