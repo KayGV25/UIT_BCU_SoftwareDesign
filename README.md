@@ -43,7 +43,7 @@ rtmp {
                         live on;
 
                         # Call Java server for authentication before accepting stream
-                        on_publish http://<JAVA_SERVER_IP>:8080/api/stream/validate;
+                        on_publish http://<JAVA_SERVER_IP>:<PORT>/api/stream/validate;
                         record off;
                 }
         }
