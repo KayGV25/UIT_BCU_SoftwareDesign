@@ -8,8 +8,11 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class ChatHandler extends TextWebSocketHandler  {
     private final ConcurrentHashMap<String, CopyOnWriteArraySet<WebSocketSession>> rooms = new ConcurrentHashMap<>();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void afterConnectionEstablished(@NonNull WebSocketSession session) throws Exception {
@@ -22,14 +25,14 @@ public class ChatHandler extends TextWebSocketHandler  {
 
     @Override
     protected void handleTextMessage(@NonNull WebSocketSession session, @NonNull TextMessage message) throws Exception {
-        String roomId = getRoomId(session);
         String payload = message.getPayload();
-        System.out.println("Message in room " + roomId + ": " + payload);
-
-        // Broadcast to all clients in the same room
+        Message msg = objectMapper.readValue(payload, Message.class);
+        System.out.println("Room " + msg.getRoomId() + " - " + msg.getUser() + ": " + msg.getMessage());
+    
+        String roomId = msg.getRoomId(); // Use roomId from the message
         for (WebSocketSession s : rooms.getOrDefault(roomId, new CopyOnWriteArraySet<>())) {
             if (s.isOpen()) {
-                s.sendMessage(new TextMessage(payload));
+                s.sendMessage(new TextMessage(objectMapper.writeValueAsString(msg)));
             }
         }
     }
