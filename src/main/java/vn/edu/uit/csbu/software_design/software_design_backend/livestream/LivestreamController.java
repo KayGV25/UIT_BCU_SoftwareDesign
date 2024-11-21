@@ -45,6 +45,7 @@ public class LivestreamController {
 
         // If valid, proxy the request to the actual Nginx HLS stream
         String streamKey;
+
         // This will be checked in the data base
         // Need to have a condition where streams is offline
         if(streamId.equals("hiddenKey")){
@@ -59,6 +60,10 @@ public class LivestreamController {
                 try (@SuppressWarnings("deprecation")
                     InputStream is = new URL(nginxStreamUrl).openStream();
                     OutputStream os = response.getOutputStream()) {
+
+                    response.setHeader("Access-Control-Allow-Origin", "*"); // Allow all origins
+                    response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+                    response.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, Accept");
         
                     response.setContentType("application/vnd.apple.mpegurl");
                     byte[] buffer = new byte[8192];
@@ -78,7 +83,7 @@ public class LivestreamController {
         }
     }
 
-    @GetMapping("/watch/{streamKeyFile}")
+    @GetMapping("/{streamKeyFile}")
     public void streaming(HttpServletResponse response,
                     //    @RequestParam String token,
                        @PathVariable String streamKeyFile) {
@@ -87,13 +92,15 @@ public class LivestreamController {
         // If valid, proxy the request to the actual Nginx HLS stream
 
         String nginxStreamUrl = "http://" + streamServerIp + ":8080/hls/" + streamKeyFile;
-
         // Set up the response to proxy the stream content
         try (@SuppressWarnings("deprecation")
             InputStream is = new URL(nginxStreamUrl).openStream();
             OutputStream os = response.getOutputStream()) {
 
-            response.setContentType("application/vnd.apple.mpegurl");
+            response.setHeader("Access-Control-Allow-Origin", "*"); // Allow all origins
+            response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+            response.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, Accept");
+            response.setContentType("video/mp2t");
             byte[] buffer = new byte[8192];
             int bytesRead;
 
@@ -112,11 +119,14 @@ public class LivestreamController {
     }
     
     
+    // For validation from rtmp server
+    // Check if the streaming key is in the database
     @PostMapping("/validate")
     public ResponseEntity<String> validateSteamKey(@RequestBody MultiValueMap<String, String> rtmpBody) {
         System.out.println(rtmpBody.getFirst("name"));
         // Logic to validate stream key from a database or in-memory store
         if (livestreamManager.isValidStreamKey(rtmpBody.getFirst("name"))) {
+            System.out.println("ok");
             return ResponseEntity.ok("Valid stream key");
         }
         
