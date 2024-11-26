@@ -16,43 +16,42 @@ import org.w3c.dom.NodeList;
 
 public class LivestreamManager {
     public boolean isStreamLive(String serverIP, String streamName) {
-        return true;
-        // try {
-        //     String url = "http://" + serverIP + ":8080/status";
-        //     @SuppressWarnings("deprecation")
-        //     URL obj = new URL(url);
-        //     HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
-        //     connection.setRequestMethod("GET");
+        try {
+            String url = "http://" + serverIP + ":8088/status";
+            @SuppressWarnings("deprecation")
+            URL obj = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
+            connection.setRequestMethod("GET");
 
-        //     int responseCode = connection.getResponseCode();
-        //     if (responseCode == 200) {
-        //         // Parse the XML response
-        //         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        //         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        //         Document doc = dBuilder.parse(connection.getInputStream());
-        //         doc.getDocumentElement().normalize();
+            int responseCode = connection.getResponseCode();
+            if (responseCode == 200) {
+                // Parse the XML response
+                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+                Document doc = dBuilder.parse(connection.getInputStream());
+                doc.getDocumentElement().normalize();
 
-        //         // Find all "stream" elements
-        //         NodeList streams = doc.getElementsByTagName("stream");
-        //         for (int i = 0; i < streams.getLength(); i++) {
-        //             Element stream = (Element) streams.item(i);
-        //             String name = stream.getElementsByTagName("name").item(0).getTextContent();
-        //             if (name.equals(streamName)) {
-        //                 return true;
-        //             }
-        //         }
-        //     }
-        // } catch (Exception e) {
-        //     e.printStackTrace();
-        // }
-        // return false;
+                // Find all "stream" elements
+                NodeList streams = doc.getElementsByTagName("stream");
+                for (int i = 0; i < streams.getLength(); i++) {
+                    Element stream = (Element) streams.item(i);
+                    String name = stream.getElementsByTagName("name").item(0).getTextContent();
+                    if (name.equals(streamName)) {
+                        return true;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public List<Boolean> isStreamsLive(String serverIP, List<String> streamNames) {
         List<Boolean> returnLiveList = new ArrayList<>();
         HashSet<String> liveList = new HashSet<>();
         try {
-            String url = "http://" + serverIP + ":8080/stream-status";
+            String url = "http://" + serverIP + ":8088/status";
             @SuppressWarnings("deprecation")
             URL obj = new URL(url);
             HttpURLConnection connection = (HttpURLConnection) obj.openConnection();

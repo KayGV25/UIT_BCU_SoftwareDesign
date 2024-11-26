@@ -41,12 +41,49 @@ rtmp {
 
                 application live {
                         live on;
+                        record off;
+
+                        # HLS configuration
+                        hls on;
+                        hls_path /tmp/hls;  # Path where HLS fragments are stored
+                        hls_fragment 5s;
+                        hls_playlist_length 60;
 
                         # Call Java server for authentication before accepting stream
                         on_publish http://<JAVA_SERVER_IP>:<PORT>/api/stream/validate;
-                        record off;
                 }
         }
+}
+. . .
+http {
+        server {
+                listen 8088;
+
+                location /hls {
+                        types {
+                                application/vnd.apple.mpegurl m3u8;
+                                video/mp2t ts;
+                        }
+                        alias /tmp/hls;  # The path where HLS fragments are stored
+                        add_header Cache-Control no-cache;
+                        add_header 'Access-Control-Allow-Origin'  '*';
+                        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, HEAD';
+                        add_header 'Access-Control-Allow-Headers' 'Authorization, Origin, X-Requested-With, Content-Type, Accept';
+                }
+                
+                location /status {
+                        rtmp_stat all;
+                        rtmp_stat_stylesheet /stat.xsl;
+                        add_header 'Access-Control-Allow-Origin'  '*';
+                        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, HEAD';
+                        add_header 'Access-Control-Allow-Headers' 'Authorization, Origin, X-Requested-With, Content-Type, Accept';
+                }
+
+                location /stat.xsl {
+                        root /usr/local/nginx/html;
+                }
+        }
+        . . .
 }
 ```
 - `listen 1935` means that RTMP will be listening for connections on port 1935 (standard)
@@ -56,11 +93,17 @@ rtmp {
 - `application live` defines an application block that will be available at the /live URL path.
 - `live on` enables live mode so that multiple users can connect to your stream concurrently, a baseline assumption of video streaming.
 - `record off` disables Nginx-RTMP’s recording functionality, so that all streams are not separately saved to disk by default
+- If you are using Ngrok for simple use case run 
+```bash
+# ngrok http --hostname=<static url provided by Ngrok> 80 --scheme http
+ngrok http --hostname=marmoset-unbiased-logically.ngrok-free.app 80 --scheme http
+```
 
 #### Running
 - By default, it listens on port `1935`, which means you’ll need to open that port in your firewall. If you configured ufw as part of your initial server setup run the following command
 ```bash
 sudo ufw allow 1935/tcp
+sudo ufw allow 8088/tcp
 ```
 - Check the Nginx config file syntax
 ```bash
