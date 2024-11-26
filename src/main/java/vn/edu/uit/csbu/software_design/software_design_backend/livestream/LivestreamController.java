@@ -47,13 +47,12 @@ public class LivestreamController {
         String streamKey;
 
         // This will be checked in the data base
-        // Need to have a condition where streams is offline
         if(streamId.equals("hiddenKey")){
             // Set the streaming key which was achieved by quering the database
             streamKey = "demostream";
 
             if(livestreamManager.isStreamLive(streamServerIp, streamKey)){
-                String nginxStreamUrl = "http://"+ streamServerIp + ":8080/hls/" + streamKey + ".m3u8";
+                String nginxStreamUrl = "http://"+ streamServerIp + ":8088/hls/" + streamKey + ".m3u8";
                 // System.out.println(nginxStreamUrl);
         
                 // Set up the response to proxy the stream content
@@ -91,7 +90,7 @@ public class LivestreamController {
 
         // If valid, proxy the request to the actual Nginx HLS stream
 
-        String nginxStreamUrl = "http://" + streamServerIp + ":8080/hls/" + streamKeyFile;
+        String nginxStreamUrl = "http://" + streamServerIp + ":8088/hls/" + streamKeyFile;
         // Set up the response to proxy the stream content
         try (@SuppressWarnings("deprecation")
             InputStream is = new URL(nginxStreamUrl).openStream();
@@ -113,6 +112,12 @@ public class LivestreamController {
         }
     }
 
+    @GetMapping("/isStreamLive/{streamName}")
+    public Boolean isStreamLive(@PathVariable String streamName) {
+        return livestreamManager.isStreamLive(streamServerIp, streamName);
+    }
+    
+
     @PostMapping("/isStreamsLive")
     public List<Boolean> isLive(@RequestBody Livestreams streamNameList) {
         return livestreamManager.isStreamsLive(streamServerIp, streamNameList.streamNames);
@@ -123,10 +128,10 @@ public class LivestreamController {
     // Check if the streaming key is in the database
     @PostMapping("/validate")
     public ResponseEntity<String> validateSteamKey(@RequestBody MultiValueMap<String, String> rtmpBody) {
-        System.out.println(rtmpBody.getFirst("name"));
+        // System.out.println(rtmpBody.getFirst("name"));
         // Logic to validate stream key from a database or in-memory store
         if (livestreamManager.isValidStreamKey(rtmpBody.getFirst("name"))) {
-            System.out.println("ok");
+            // System.out.println("ok");
             return ResponseEntity.ok("Valid stream key");
         }
         
