@@ -3,7 +3,9 @@ package vn.edu.uit.csbu.software_design.software_design_backend.account;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import vn.edu.uit.csbu.software_design.software_design_backend.Util;
+import java.security.NoSuchAlgorithmException;
+
+// import vn.edu.uit.csbu.software_design.software_design_backend.Util;
 
 import java.util.Optional;
 
@@ -24,8 +26,8 @@ public class accountController {
     @Autowired
     accountService accountService;
 
-    @Autowired
-    Util util;
+    // @Autowired
+    // Util util;
 
     @GetMapping("")
     public ResponseEntity<accountModel> getMethodName(@RequestParam String name) {
@@ -35,9 +37,9 @@ public class accountController {
     }
     
 
-    // @PostMapping("/")
-    // public void createAccount(@RequestBody accountRequest account) {
-    //     accountService.addAccount(account);
-    // }
+    @PostMapping("")
+    public ResponseEntity<String> createAccount(@RequestBody accountRequest account) throws NoSuchAlgorithmException {
+        return accountService.addAccount(account);
+    }
     
 }
