@@ -10,11 +10,20 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-public class LivestreamManager {
+import vn.edu.uit.csbu.software_design.software_design_backend.account.accountRepository;
+
+@Service
+public class LivestreamService {
+
+    @Autowired
+    private accountRepository accountRepository;
+
     public boolean isStreamLive(String serverIP, String streamName) {
         try {
             String url = "http://" + serverIP + ":8088/status";
@@ -87,8 +96,7 @@ public class LivestreamManager {
         return returnLiveList;
     }
 
-    protected boolean isValidStreamKey(String streamKey) {
-        // TODO: Implement stream key validation
-        return true; // Replace with actual validation logic
+    public boolean isValidStreamKey(String streamKey) {
+        return accountRepository.existsByStreamKey(streamKey);
     }
 }
