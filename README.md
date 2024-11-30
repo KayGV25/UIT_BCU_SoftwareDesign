@@ -96,7 +96,7 @@ http {
 - If you are using Ngrok for simple use case run 
 ```bash
 # ngrok http --hostname=<static url provided by Ngrok> 80 --scheme http
-ngrok http --hostname=marmoset-unbiased-logically.ngrok-free.app 80 --scheme http
+ngrok http --hostname=marmoset-unbiased-logically.ngrok-free.app 80 --scheme http,https
 ```
 
 #### Running
