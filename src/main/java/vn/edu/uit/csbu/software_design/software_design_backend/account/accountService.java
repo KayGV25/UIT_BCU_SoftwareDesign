@@ -46,4 +46,18 @@ public class accountService {
             return ResponseEntity.ok("Account created");
         }
     }
+
+    ResponseEntity<String> login(accountRequest account) throws NoSuchAlgorithmException{
+        Optional<accountModel> dbAccount = getAccount(account.name());
+        if(dbAccount.isPresent()){
+            String reqPassHashed = security.toHexString(security.getSHA(account.password()));
+            if(reqPassHashed.equals(dbAccount.get().getPassword())){
+                return ResponseEntity.ok("");
+            }
+            else{
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Wrong password");
+            }
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No account found");
+    }
 }
