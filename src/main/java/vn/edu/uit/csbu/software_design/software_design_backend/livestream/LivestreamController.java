@@ -6,12 +6,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletResponse;
+import vn.edu.uit.csbu.software_design.software_design_backend.account.accountModel;
+import vn.edu.uit.csbu.software_design.software_design_backend.account.accountRepository;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +36,8 @@ public class LivestreamController {
     // Livestream manager class
     @Autowired
     LivestreamService livestreamService;
+    @Autowired
+    accountRepository accountRepository;
 
     // Static ip of the nginx server
     @Value("${app.streamserver.ip}")
@@ -47,11 +52,11 @@ public class LivestreamController {
 
         // If valid, proxy the request to the actual Nginx HLS stream
         String streamKey;
-
+        Optional<accountModel> streamer = accountRepository.findByName(streamId);
         // This will be checked in the data base
-        if(streamId.equals("hiddenKey")){
+        if(streamer.isPresent()){
             // Set the streaming key which was achieved by quering the database
-            streamKey = "demostream";
+            streamKey = streamer.get().getStreamKey();
 
             if(livestreamService.isStreamLive(streamServerIp, streamKey)){
                 String nginxStreamUrl = "http://"+ streamServerIp + ":8088/hls/" + streamKey + ".m3u8";

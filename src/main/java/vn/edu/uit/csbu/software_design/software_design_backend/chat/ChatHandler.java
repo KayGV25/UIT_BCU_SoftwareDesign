@@ -20,14 +20,14 @@ public class ChatHandler extends TextWebSocketHandler  {
         rooms.putIfAbsent(roomId, new CopyOnWriteArraySet<>());
         rooms.get(roomId).add(session);
 
-        System.out.println("User connected to room: " + roomId);
+        // System.out.println("User connected to room: " + roomId);
     }
 
     @Override
     protected void handleTextMessage(@NonNull WebSocketSession session, @NonNull TextMessage message) throws Exception {
         String payload = message.getPayload();
         Message msg = objectMapper.readValue(payload, Message.class);
-        System.out.println("Room " + msg.getRoomId() + " - " + msg.getUser() + ": " + msg.getMessage());
+        // System.out.println("Room " + msg.getRoomId() + " - " + msg.getUser() + ": " + msg.getMessage());
     
         String roomId = msg.getRoomId(); // Use roomId from the message
         for (WebSocketSession s : rooms.getOrDefault(roomId, new CopyOnWriteArraySet<>())) {
@@ -45,7 +45,7 @@ public class ChatHandler extends TextWebSocketHandler  {
             rooms.remove(roomId);
         }
 
-        System.out.println("User disconnected from room: " + roomId);
+        // System.out.println("User disconnected from room: " + roomId);
     }
 
     @SuppressWarnings("null")
