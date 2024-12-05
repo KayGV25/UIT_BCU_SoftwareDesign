@@ -6,13 +6,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletResponse;
+import vn.edu.uit.csbu.software_design.software_design_backend.account.accountModel;
+import vn.edu.uit.csbu.software_design.software_design_backend.account.accountRepository;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +34,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class LivestreamController {
 
     // Livestream manager class
-    LivestreamManager livestreamManager = new LivestreamManager();
+    @Autowired
+    LivestreamService livestreamService;
+    @Autowired
+    accountRepository accountRepository;
 
     // Static ip of the nginx server
     @Value("${app.streamserver.ip}")
@@ -45,13 +52,13 @@ public class LivestreamController {
 
         // If valid, proxy the request to the actual Nginx HLS stream
         String streamKey;
-
+        Optional<accountModel> streamer = accountRepository.findByName(streamId);
         // This will be checked in the data base
-        if(streamId.equals("hiddenKey")){
+        if(streamer.isPresent()){
             // Set the streaming key which was achieved by quering the database
-            streamKey = "demostream";
+            streamKey = streamer.get().getStreamKey();
 
-            if(livestreamManager.isStreamLive(streamServerIp, streamKey)){
+            if(livestreamService.isStreamLive(streamServerIp, streamKey)){
                 String nginxStreamUrl = "http://"+ streamServerIp + ":8088/hls/" + streamKey + ".m3u8";
                 // System.out.println(nginxStreamUrl);
         
@@ -114,13 +121,13 @@ public class LivestreamController {
 
     @GetMapping("/isStreamLive/{streamName}")
     public Boolean isStreamLive(@PathVariable String streamName) {
-        return livestreamManager.isStreamLive(streamServerIp, streamName);
+        return livestreamService.isStreamLive(streamServerIp, streamName);
     }
     
 
     @PostMapping("/isStreamsLive")
     public List<Boolean> isLive(@RequestBody Livestreams streamNameList) {
-        return livestreamManager.isStreamsLive(streamServerIp, streamNameList.streamNames);
+        return livestreamService.isStreamsLive(streamServerIp, streamNameList.streamNames);
     }
     
     
@@ -130,7 +137,7 @@ public class LivestreamController {
     public ResponseEntity<String> validateSteamKey(@RequestBody MultiValueMap<String, String> rtmpBody) {
         // System.out.println(rtmpBody.getFirst("name"));
         // Logic to validate stream key from a database or in-memory store
-        if (livestreamManager.isValidStreamKey(rtmpBody.getFirst("name"))) {
+        if (livestreamService.isValidStreamKey(rtmpBody.getFirst("name"))) {
             // System.out.println("ok");
             return ResponseEntity.ok("Valid stream key");
         }

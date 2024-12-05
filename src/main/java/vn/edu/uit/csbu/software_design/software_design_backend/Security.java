@@ -11,7 +11,7 @@ public class Security {
     public byte[] getSHA(String input) throws NoSuchAlgorithmException
     {
         // Static getInstance method is called with hashing SHA
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        MessageDigest md = MessageDigest.getInstance("SHA3-256");
  
         // digest() method called
         // to calculate message digest of an input
