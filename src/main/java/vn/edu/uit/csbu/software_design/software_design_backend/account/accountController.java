@@ -7,8 +7,6 @@ import vn.edu.uit.csbu.software_design.software_design_backend.Security;
 
 import java.security.NoSuchAlgorithmException;
 
-// import vn.edu.uit.csbu.software_design.software_design_backend.Util;
-
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 
 
@@ -30,9 +31,6 @@ public class accountController {
     accountService accountService;
 
     Security security;
-
-    // @Autowired
-    // Util util;
 
     @GetMapping("")
     public ResponseEntity<accountModel> findAccount(@RequestParam String name) {
@@ -51,4 +49,19 @@ public class accountController {
     public ResponseEntity<String> postMethodName(@RequestBody accountRequest account) throws NoSuchAlgorithmException {
         return accountService.login(account);
     }
+
+    @PutMapping("/update/{type}")
+    public ResponseEntity<String> putMethodName(@PathVariable String type, @RequestBody accountRequest account) throws NoSuchAlgorithmException{
+        if(type.equals("streamkey")){
+            return accountService.updateStreamKey(account);
+        }
+        // else if(type.equals("password")){
+        //     return accountService.updatePassword(account);
+        // }
+        else{
+            return ResponseEntity.badRequest().body("Invalid type");
+        
+        }
+    }
+    
 }

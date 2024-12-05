@@ -33,9 +33,12 @@ public class accountService {
             String pass = security.toHexString(security.getSHA(account.password()));
             String streamKey = security.getHashedStringOfLength(new String(account.name() + Calendar.getInstance().getTimeInMillis()), 32);
             String uuid = UUID.randomUUID().toString();
-            System.out.println(uuid);
-            System.out.println(pass);
-            System.out.println(streamKey);
+            while(accountRepository.existsById(uuid)){
+                uuid = UUID.randomUUID().toString();
+            }
+            // System.out.println(uuid);
+            // System.out.println(pass);
+            // System.out.println(streamKey);
             accountModel accountModel = new accountModel(
                 uuid,
                 account.name(),
@@ -57,6 +60,21 @@ public class accountService {
             else{
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Wrong password");
             }
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No account found");
+    }
+
+    ResponseEntity<String> updateStreamKey(accountRequest account) throws NoSuchAlgorithmException {
+        Optional<accountModel> dbAccount = getAccount(account.name());
+        if(dbAccount.isPresent()){
+            String reqPassHashed = security.toHexString(security.getSHA(account.password()));
+            if(reqPassHashed.equals(dbAccount.get().getPassword())){
+                String streamKey = security.getHashedStringOfLength(new String(account.name() + Calendar.getInstance().getTimeInMillis()), 32);
+                dbAccount.get().setStreamKey(streamKey);
+                accountRepository.save(dbAccount.get());
+                return ResponseEntity.ok("Stream key changed");
+            }
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Wrong password");
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No account found");
     }
