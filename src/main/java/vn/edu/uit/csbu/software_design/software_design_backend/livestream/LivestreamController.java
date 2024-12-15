@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletResponse;
+import vn.edu.uit.csbu.software_design.software_design_backend.Security;
 import vn.edu.uit.csbu.software_design.software_design_backend.account.accountModel;
 import vn.edu.uit.csbu.software_design.software_design_backend.account.accountRepository;
 
@@ -52,6 +53,9 @@ public class LivestreamController {
 
         // If valid, proxy the request to the actual Nginx HLS stream
         String streamKey;
+        // if(Security.containsSQLInjection(streamId)){
+        //     response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
+        // }
         Optional<accountModel> streamer = accountRepository.findByName(streamId);
         // This will be checked in the data base
         if(streamer.isPresent()){
@@ -59,9 +63,7 @@ public class LivestreamController {
             streamKey = streamer.get().getStreamKey();
 
             if(livestreamService.isStreamLive(streamServerIp, streamKey)){
-                String nginxStreamUrl = "http://"+ streamServerIp + ":8088/hls/" + streamKey + ".m3u8";
-                // System.out.println(nginxStreamUrl);
-        
+                String nginxStreamUrl = "http://"+ streamServerIp + ":8088/hls/" + streamKey + ".m3u8";        
                 // Set up the response to proxy the stream content
                 try (@SuppressWarnings("deprecation")
                     InputStream is = new URL(nginxStreamUrl).openStream();
@@ -85,7 +87,7 @@ public class LivestreamController {
             }
         }
         else{
-            throw new LivestreamNotFoundException();
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 
@@ -96,7 +98,9 @@ public class LivestreamController {
         // Validate the token and streamId (you can use the previous JWT-based validation method)
 
         // If valid, proxy the request to the actual Nginx HLS stream
-
+        if(Security.containsSQLInjection(streamKeyFile)){
+            response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
+        }
         String nginxStreamUrl = "http://" + streamServerIp + ":8088/hls/" + streamKeyFile;
         // Set up the response to proxy the stream content
         try (@SuppressWarnings("deprecation")

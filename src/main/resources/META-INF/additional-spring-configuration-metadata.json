@@ -3,5 +3,11 @@
     "name": "app.streamserver.ip",
     "type": "java.lang.String",
     "description": "Ip address for nginx server"
+  },
+  {
+    "name": "secret",
+    "type": "java.lang.String",
+    "description": "Secret key for signing Hash password"
+
   }
-]} 
+]}

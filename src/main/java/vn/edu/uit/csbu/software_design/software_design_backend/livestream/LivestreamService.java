@@ -33,7 +33,7 @@ public class LivestreamService {
             connection.setRequestMethod("GET");
 
             int responseCode = connection.getResponseCode();
-            if (responseCode == 200) {
+            if (responseCode <= 400) {
                 // Parse the XML response
                 DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
