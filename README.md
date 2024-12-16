@@ -9,7 +9,7 @@
 
 ## Setting your NGINX server
 - Here i'm following a guide from **DigitalOcean** (Source: [DigitalOcean Guide](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-video-streaming-server-using-nginx-rtmp-on-ubuntu-20-04))
-### Intstalling and Configuring Nginx-RTMP
+### Installing and Configuring Nginx-RTMP
 #### Installing
 - Most of the time Nginx RTMP modules does not come along with Nginx but from Ubuntu 22.04 you can install it as a additional package 
 ```bash
@@ -20,7 +20,7 @@ sudo apt install libnginx-mod-rtmp
 - After you have downloaded the package use the command below to start configuring Nginx to run RTMP server 
 ```bash
 # This will open the editor for you to edit the configuration file
-# You can use vim or nvim for better expirience
+# You can use vim or nvim for better experience
 sudo nano /etc/nginx/nginx.conf
 ```
 - Add this to the end of the file

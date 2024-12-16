@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import vn.edu.uit.csbu.software_design.software_design_backend.Security;
 import vn.edu.uit.csbu.software_design.software_design_backend.account.accountModel;
 import vn.edu.uit.csbu.software_design.software_design_backend.account.accountRepository;
+import vn.edu.uit.csbu.software_design.software_design_backend.account.accountSecureResponseDTO;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -133,6 +134,17 @@ public class LivestreamController {
     public List<Boolean> isLive(@RequestBody Livestreams streamNameList) {
         return livestreamService.isStreamsLive(streamServerIp, streamNameList.streamNames);
     }
+
+    @GetMapping("/streaming")
+    public List<accountSecureResponseDTO> getCurrentStreaming(@RequestParam Optional<Integer> page) {
+        int p;
+        if(!page.isPresent()) p = 1;
+        else{
+            p = page.get().intValue();
+        }
+        return livestreamService.getCurrentStreaming(p, streamServerIp);
+    }
+    
     
     
     // For validation from rtmp server
