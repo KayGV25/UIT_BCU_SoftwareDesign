@@ -4,16 +4,10 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 @Table(name = "following", schema = "public")
 public class followingModel {
     @Id
@@ -22,4 +16,23 @@ public class followingModel {
 
     @Column(name = "streamer_id")
     private String streamerId;
+
+    public String getAccountId() {
+        return accountId;
+    }
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+    public String getStreamerId() {
+        return streamerId;
+    }
+    public void setStreamerId(String streamerId) {
+        this.streamerId = streamerId;
+    }
+
+    public followingModel(String accountId, String streamerId) {
+        this.accountId = accountId;
+        this.streamerId = streamerId;
+    }
+
 }

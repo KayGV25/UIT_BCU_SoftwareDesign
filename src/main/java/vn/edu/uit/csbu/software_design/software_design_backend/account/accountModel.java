@@ -12,16 +12,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import vn.edu.uit.csbu.software_design.software_design_backend.following.followingModel;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+// @Getter
+// @Setter
 @Table(name = "user", schema = "public")
 public class accountModel {
     
@@ -48,6 +46,53 @@ public class accountModel {
 
     @OneToMany(mappedBy = "accountId")
     private Set<followingModel> following;
+
+    public String getId(){
+        return this.id;
+    }
+
+    public String getName(){
+        return this.name;
+    }
+
+    public String getPassword(){
+        return this.password;
+    }
+
+    public String getStreamKey(){
+        return this.streamKey;
+    }
+
+    public String getTitle(){
+        return this.title;
+    }
+
+    public String getDescription(){
+        return this.description;
+    }
+
+    public void setId(String id){
+        this.id = id;
+    }
+
+    public void setName(String name){
+        this.name = name;
+    }
+    public void setPassword(String password){
+        this.password = password;
+    }
+
+    public void setStreamKey(String streamKey){
+        this.streamKey = streamKey;
+    }
+
+    public void setTitle(String title){
+        this.title = title;
+    }
+
+    public void setDescription(String description){
+        this.description = description;
+    }
 
     public List<String> getFollowingStreamId(){
         List<String> followingStreamId = new ArrayList<>();
