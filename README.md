@@ -151,4 +151,4 @@ sudo systemctl status nginx.service # to check status
 - JPA
 - Websocket
 #### Document
-- To be updated
+- [Java doc](https://kaygv25.github.io/CSBU-Software-Design-Back-End-Doc/)
