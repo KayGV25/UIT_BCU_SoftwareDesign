@@ -152,3 +152,12 @@ sudo systemctl status nginx.service # to check status
 - Websocket
 #### Document
 - [Java doc](https://kaygv25.github.io/CSBU-Software-Design-Back-End-Doc/)
+Backend for a live streaming platform deployed on AWS EC2 and Render, equiped with Nginx RTMP stream, live chat using websocket; account creation, modification, and deletion; secure user data using hash, light defense against XSS and SQL injection using patter recognition.
+Technologies:
+Java Spring Boot
+Nginx with RTMP
+PostgreSQL
+Docker
+Links:
+Source code: https://github.com/KayGV25/UIT_BCU_SoftwareDesign
+Documentation: https://kaygv25.github.io/CSBU-Software-Design-Back-End-Doc/
