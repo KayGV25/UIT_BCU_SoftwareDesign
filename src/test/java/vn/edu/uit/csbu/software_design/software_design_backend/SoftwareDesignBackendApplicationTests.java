@@ -7,16 +7,28 @@ import org.springframework.boot.test.context.SpringBootTest;
 import vn.edu.uit.csbu.software_design.software_design_backend.account.accountRepository;
 import vn.edu.uit.csbu.software_design.software_design_backend.livestream.LivestreamService;
 
+/**
+ * The type Software design backend application tests.
+ */
 @SpringBootTest
 class SoftwareDesignBackendApplicationTests {
 
-	@Autowired
+    /**
+     * The Account repository.
+     */
+    @Autowired
 	accountRepository accountRepository;
 
-	@Autowired
+    /**
+     * The Livestream service.
+     */
+    @Autowired
 	LivestreamService livestreamService;
 
-	@Test
+    /**
+     * Context loads.
+     */
+    @Test
 	void contextLoads() {
 	}
 }

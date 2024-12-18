@@ -22,18 +22,33 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 
-
-
+/**
+ * REST controller for managing user accounts.
+ * Provides endpoints for account creation, login, retrieval, updates, and deletion.
+ * Handles security validations and communicates with the {@code accountService}.
+ */
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping(value = "/api/account")
 public class accountController {
-    
+
+    /**
+     * The Account service.
+     */
     @Autowired
     accountService accountService;
 
+    /**
+     * The Security.
+     */
     Security security;
 
+    /**
+     * Retrieves account information by name.
+     *
+     * @param name the name of the account to retrieve             (must not contain SQL injection patterns)
+     * @return Response Entity containing the account information or a 404 status if not found
+     */
     @GetMapping("")
     public ResponseEntity<accountModel> findAccount(@RequestParam String name) {
         if(Security.containsSQLInjection(name)){
@@ -43,8 +58,14 @@ public class accountController {
         return account.map(ResponseEntity::ok)
                   .orElseGet(() -> ResponseEntity.notFound().build());
     }
-    
 
+    /**
+     * Registers a new account.
+     *
+     * @param account the request body containing account details, including username and password                (must not contain SQL injection patterns)
+     * @return Response Entity with a success message or an error response if validation fails
+     * @throws NoSuchAlgorithmException if a required hashing algorithm is unavailable
+     */
     @PostMapping("/register")
     public ResponseEntity<String> createAccount(@RequestBody accountRequest account) throws NoSuchAlgorithmException {
         if(Security.containsSQLInjection(account.name()) || Security.containsSQLInjection(account.password())){
@@ -52,7 +73,14 @@ public class accountController {
         }
         return accountService.addAccount(account);
     }
-    
+
+    /**
+     * Authenticates a user and generates a login token.
+     *
+     * @param account the request body containing account credentials (username and password)
+     * @return Response Entity containing the login response or an error if authentication fails
+     * @throws NoSuchAlgorithmException if a required hashing algorithm is unavailable
+     */
     @PostMapping("/login")
     public ResponseEntity<accountResponseDTO> login(@RequestBody accountRequest account) throws NoSuchAlgorithmException {
         // if(Security.containsSQLInjection(account.name()) || Security.containsSQLInjection(account.password())){
@@ -63,18 +91,39 @@ public class accountController {
         return response;
     }
 
+    /**
+     * Retrieves the stream key for the authenticated user.
+     *
+     * @param token the authorization token provided in the request header
+     * @return Response Entity containing the list of following accounts or an error response if unauthorized
+     * @throws NoSuchAlgorithmException if a required hashing algorithm is unavailable
+     */
     @GetMapping("/auth/following")
     public ResponseEntity<accountResponseDTO> getFollowing(@RequestHeader("Authorization") String token) throws NoSuchAlgorithmException {
         return accountService.getFollowing(token);
     }
-    
 
+    /**
+     * Retrieves the stream key for the authenticated user.
+     *
+     * @param token the authorization token provided in the request header
+     * @return Response Entity containing the stream key or an error response if unauthorized
+     * @throws NoSuchAlgorithmException if a required hashing algorithm is unavailable
+     */
     @GetMapping("/auth/streamkey")
     public ResponseEntity<accountResponseDTO> getStreamKey(@RequestHeader("Authorization") String token) throws NoSuchAlgorithmException {
         return accountService.getStreamKey(token);
     }
 
-
+    /**
+     * Updates user account information based on the specified type parameter.
+     *
+     * @param token   the authorization token provided in the request header
+     * @param type    the type of update to perform (e.g., "streamkey", "title", "description", etc.)
+     * @param account the request body containing the data for the update                (must not contain SQL injection patterns)
+     * @return Response Entity with the status of the update operation
+     * @throws NoSuchAlgorithmException if a required hashing algorithm is unavailable
+     */
     @PutMapping("/auth/update/{type}")
     public ResponseEntity<accountResponseDTO> update(@RequestHeader("Authorization") String token, @PathVariable String type, @RequestBody accountRequest account) throws NoSuchAlgorithmException{
         if(Security.containsSQLInjection(account.name()) || Security.containsSQLInjection(account.password())){
@@ -95,6 +144,14 @@ public class accountController {
         }
     }
 
+    /**
+     * Adds or removes a stream from the user's following list.
+     *
+     * @param streamId the ID of the stream to follow or unfollow
+     * @param account  the request body containing the user's credentials (username and password)                (must not contain SQL injection patterns)
+     * @return Response Entity with the status of the follow or unfollow operation
+     * @throws NoSuchAlgorithmException if a required hashing algorithm is unavailable
+     */
     @PutMapping("/auth/follow/streamId")
     public ResponseEntity<String> follow(@PathVariable String streamId, @RequestBody accountRequest account) throws NoSuchAlgorithmException{
         if(Security.containsSQLInjection(account.name()) || Security.containsSQLInjection(account.password())){
@@ -103,6 +160,13 @@ public class accountController {
         return accountService.addToFollowing(account, streamId);
     }
 
+    /**
+     * Deletes the authenticated user's account.
+     *
+     * @param token the authorization token provided in the request header
+     * @return Response Entity with the status of the account deletion operation
+     * @throws NoSuchAlgorithmException if a required hashing algorithm is unavailable
+     */
     @DeleteMapping("/auth/delete")
     public ResponseEntity<accountResponseDTO> delete(@RequestHeader("Authorization") String token) throws NoSuchAlgorithmException{
         return accountService.deleteAccount(token);

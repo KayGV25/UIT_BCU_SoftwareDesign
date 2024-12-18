@@ -7,6 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * The type Account response dto.
+ */
 @Getter
 @Setter
 public class accountResponseDTO {
@@ -22,6 +25,13 @@ public class accountResponseDTO {
         return "accountResponseDTO{data='" + data + "', response='" + response + "', dataArray=" + dataArray + "}";
     }
 
+    /**
+     * Instantiates a new Account response dto.
+     *
+     * @param data    the data
+     * @param optData the opt data
+     * @param type    the type
+     */
     public accountResponseDTO(String data, String optData ,accountResponseType type){
         switch (type) {
             case DATA -> this.data = data;
@@ -31,6 +41,13 @@ public class accountResponseDTO {
         }
     }
 
+    /**
+     * Instantiates a new Account response dto.
+     *
+     * @param dataArray the data array
+     * @param optData   the opt data
+     * @param type      the type
+     */
     public accountResponseDTO(ArrayList<accountModel> dataArray, String optData ,accountResponseType type){
         switch (type) {
             case DATA -> this.dataArray = dataArray;

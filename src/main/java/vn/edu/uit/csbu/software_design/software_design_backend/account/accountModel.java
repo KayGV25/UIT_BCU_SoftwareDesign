@@ -14,6 +14,9 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import vn.edu.uit.csbu.software_design.software_design_backend.following.followingModel;
 
+/**
+ * The type Account model.
+ */
 @Entity
 @AllArgsConstructor
 @Table(name = "user", schema = "public")
@@ -43,53 +46,119 @@ public class accountModel {
     @OneToMany(mappedBy = "accountId")
     private Set<followingModel> following;
 
+    /**
+     * Get id string.
+     *
+     * @return the string
+     */
     public String getId(){
         return this.id;
     }
 
+    /**
+     * Get name string.
+     *
+     * @return the string
+     */
     public String getName(){
         return this.name;
     }
 
+    /**
+     * Get password string.
+     *
+     * @return the string
+     */
     public String getPassword(){
         return this.password;
     }
 
+    /**
+     * Get stream key string.
+     *
+     * @return the string
+     */
     public String getStreamKey(){
         return this.streamKey;
     }
 
+    /**
+     * Get title string.
+     *
+     * @return the string
+     */
     public String getTitle(){
         return this.title;
     }
 
+    /**
+     * Get description string.
+     *
+     * @return the string
+     */
     public String getDescription(){
         return this.description;
     }
 
+    /**
+     * Set id.
+     *
+     * @param id the id
+     */
     public void setId(String id){
         this.id = id;
     }
 
+    /**
+     * Set name.
+     *
+     * @param name the name
+     */
     public void setName(String name){
         this.name = name;
     }
+
+    /**
+     * Set password.
+     *
+     * @param password the password
+     */
     public void setPassword(String password){
         this.password = password;
     }
 
+    /**
+     * Set stream key.
+     *
+     * @param streamKey the stream key
+     */
     public void setStreamKey(String streamKey){
         this.streamKey = streamKey;
     }
 
+    /**
+     * Set title.
+     *
+     * @param title the title
+     */
     public void setTitle(String title){
         this.title = title;
     }
 
+    /**
+     * Set description.
+     *
+     * @param description the description
+     */
     public void setDescription(String description){
         this.description = description;
     }
 
+    /**
+     * Get following stream id list.
+     *
+     * @return the list
+     */
     @JsonIgnore
     public List<String> getFollowingStreamId(){
         List<String> followingStreamId = new ArrayList<>();
@@ -99,16 +168,34 @@ public class accountModel {
         return followingStreamId;
     }
 
+    /**
+     * Instantiates a new Account model.
+     */
     public accountModel(){
 
     }
 
+    /**
+     * Instantiates a new Account model.
+     *
+     * @param name      the name
+     * @param password  the password
+     * @param streamKey the stream key
+     */
     public accountModel(String name, String password, String streamKey){
         this.name = name;
         this.password = password;
         this.streamKey = streamKey;
     }
 
+    /**
+     * Instantiates a new Account model.
+     *
+     * @param uuid      the uuid
+     * @param name      the name
+     * @param password  the password
+     * @param streamKey the stream key
+     */
     public accountModel(String uuid, String name, String password, String streamKey){
         this.id = uuid;
         this.name = name;

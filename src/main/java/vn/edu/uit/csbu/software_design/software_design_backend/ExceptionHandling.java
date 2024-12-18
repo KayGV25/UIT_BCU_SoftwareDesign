@@ -8,9 +8,18 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import vn.edu.uit.csbu.software_design.software_design_backend.livestream.LivestreamNotFoundException;
 
+/**
+ * The type Exception handling.
+ */
 @ControllerAdvice
 public class ExceptionHandling extends ResponseEntityExceptionHandler{
-    
+
+    /**
+     * Handle livestream not found exception string.
+     *
+     * @param ex the ex
+     * @return the string
+     */
     @ExceptionHandler(LivestreamNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleLivestreamNotFoundException(LayerInstantiationException ex){
