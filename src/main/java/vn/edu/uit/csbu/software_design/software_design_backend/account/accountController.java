@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/api/account")
+@RequestMapping(value = "/api/account")
 public class accountController {
     
     @Autowired
@@ -54,12 +54,20 @@ public class accountController {
     }
     
     @PostMapping("/login")
-    public ResponseEntity<accountResponseDTO> postMethodName(@RequestBody accountRequest account) throws NoSuchAlgorithmException {
+    public ResponseEntity<accountResponseDTO> login(@RequestBody accountRequest account) throws NoSuchAlgorithmException {
         // if(Security.containsSQLInjection(account.name()) || Security.containsSQLInjection(account.password())){
         //     return ResponseEntity.badRequest().body(null);
         // }
-        return accountService.login(account);
+        ResponseEntity<accountResponseDTO> response = accountService.login(account);
+        System.out.println("Login response: " + response.getBody());  // Log the response body
+        return response;
     }
+
+    @GetMapping("/auth/following")
+    public ResponseEntity<accountResponseDTO> getFollowing(@RequestHeader("Authorization") String token) throws NoSuchAlgorithmException {
+        return accountService.getFollowing(token);
+    }
+    
 
     @GetMapping("/auth/streamkey")
     public ResponseEntity<accountResponseDTO> getStreamKey(@RequestHeader("Authorization") String token) throws NoSuchAlgorithmException {

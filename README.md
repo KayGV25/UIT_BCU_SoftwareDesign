@@ -98,7 +98,12 @@ http {
 # ngrok http --hostname=<static url provided by Ngrok> 80 --scheme http
 ngrok http --hostname=marmoset-unbiased-logically.ngrok-free.app 80 --scheme http,https
 ```
-
+#### Docker
+```bash
+docker build -t csbu_software_design_2024 .
+docker login
+docker tag csbu_software_design_2024 kaygv/csbu_software_design_2024:latest 
+```
 #### Running
 - By default, it listens on port `1935`, which means you’ll need to open that port in your firewall. If you configured ufw as part of your initial server setup run the following command
 ```bash

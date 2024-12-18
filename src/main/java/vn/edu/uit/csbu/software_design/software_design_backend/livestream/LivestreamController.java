@@ -136,13 +136,15 @@ public class LivestreamController {
     }
 
     @GetMapping("/streaming")
-    public List<accountSecureResponseDTO> getCurrentStreaming(@RequestParam Optional<Integer> page) {
-        int p;
-        if(!page.isPresent()) p = 1;
-        else{
-            p = page.get().intValue();
-        }
-        return livestreamService.getCurrentStreaming(p, streamServerIp);
+    public List<accountSecureResponseDTO> getCurrentStreaming(@RequestParam(required = false) Integer page) {
+        // int p;
+        // if(!page.isPresent()) p = 1;
+        // else{
+        //     p = page.get().intValue();
+        // }
+        if(page == null) page = 1;
+        else page = page.intValue();
+        return livestreamService.getCurrentStreaming(page, streamServerIp);
     }
     
     

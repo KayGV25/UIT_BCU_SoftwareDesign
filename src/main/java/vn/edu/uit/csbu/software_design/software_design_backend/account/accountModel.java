@@ -12,14 +12,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import vn.edu.uit.csbu.software_design.software_design_backend.following.followingModel;
 
 @Entity
 @AllArgsConstructor
-@NoArgsConstructor
-// @Getter
-// @Setter
 @Table(name = "user", schema = "public")
 public class accountModel {
     
@@ -94,12 +90,17 @@ public class accountModel {
         this.description = description;
     }
 
+    @JsonIgnore
     public List<String> getFollowingStreamId(){
         List<String> followingStreamId = new ArrayList<>();
         for(followingModel f : following) {
             followingStreamId.add(f.getStreamerId());
         }
         return followingStreamId;
+    }
+
+    public accountModel(){
+
     }
 
     public accountModel(String name, String password, String streamKey){

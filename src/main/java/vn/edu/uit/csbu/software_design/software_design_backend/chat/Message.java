@@ -1,10 +1,7 @@
 package vn.edu.uit.csbu.software_design.software_design_backend.chat;
 
-import lombok.NoArgsConstructor;
-
 // @Getter
 // @Setter
-@NoArgsConstructor
 public class Message {
     private String user;
     private String roomId;
@@ -27,5 +24,8 @@ public class Message {
     }
     public void setMessage(String message){
         this.message = message;
+    }
+
+    public Message(){
     }
 }

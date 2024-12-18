@@ -1,6 +1,7 @@
 package vn.edu.uit.csbu.software_design.software_design_backend.account;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Optional;
 import java.util.UUID;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Service;
 import vn.edu.uit.csbu.software_design.software_design_backend.Security;
 import vn.edu.uit.csbu.software_design.software_design_backend.following.followingModel;
 import vn.edu.uit.csbu.software_design.software_design_backend.following.followingRepository;
-import vn.edu.uit.csbu.software_design.software_design_backend.jwt.JWTModel;
 import vn.edu.uit.csbu.software_design.software_design_backend.jwt.JWTUtil;
 
 @Service
@@ -79,7 +79,8 @@ public class accountService {
         if(dbAccount.isPresent()){
             String reqPassHashed = security.toHexString(security.getSHA(account.name()+account.password()+secret));
             if(reqPassHashed.equals(dbAccount.get().getPassword())){
-                return ResponseEntity.ok(new accountResponseDTO(new JWTModel(JWTUtil.generateToken(dbAccount.get().getName())).token(), null, accountResponseType.DATA));
+                String token = JWTUtil.generateToken(dbAccount.get().getName());
+                return ResponseEntity.ok(new accountResponseDTO(token, null, accountResponseType.DATA));
             }
             else{
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new accountResponseDTO("Wrong password", null, accountResponseType.RESPONSE));
@@ -112,6 +113,22 @@ public class accountService {
             return ResponseEntity.status(HttpStatus.OK).body(new accountResponseDTO("Streamkey Updated", null, accountResponseType.RESPONSE));
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new accountResponseDTO("Streamkey Updated", null, accountResponseType.RESPONSE));
+    }
+
+    ResponseEntity<accountResponseDTO> getFollowing(String token) throws NoSuchAlgorithmException{
+        Optional<accountModel> dbAccount = getAccountToken(token);
+        if(dbAccount.isPresent()){
+            ArrayList<accountModel> followingList = new ArrayList<>();
+            for(String id:dbAccount.get().getFollowingStreamId()){
+                Optional<accountModel> following = accountRepository.findById(id);
+                if(following.isPresent()){
+                    followingList.add(following.get());
+                }
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(new accountResponseDTO(followingList, null, accountResponseType.DATA));
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new accountResponseDTO("No Account Found", null, accountResponseType.RESPONSE));
+
     }
 
     ResponseEntity<String> addToFollowing(accountRequest account, String streamId) throws NoSuchAlgorithmException {

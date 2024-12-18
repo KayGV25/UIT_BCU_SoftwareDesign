@@ -4,10 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor
 @Table(name = "following", schema = "public")
 public class followingModel {
     @Id
@@ -29,6 +27,12 @@ public class followingModel {
     public void setStreamerId(String streamerId) {
         this.streamerId = streamerId;
     }
+
+    public followingModel() { 
+
+    }
+
+
 
     public followingModel(String accountId, String streamerId) {
         this.accountId = accountId;
