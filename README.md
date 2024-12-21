@@ -1,3 +1,20 @@
+# Table of Contents
+1. [Setup Guide](#setup-guide)
+   - [A Few Words](#a-few-words)
+   - [Project Information](#project-information)
+2. [Setting Your NGINX Server](#setting-your-nginx-server)
+   - [Installing and Configuring Nginx-RTMP](#installing-and-configuring-nginx-rtmp)
+     - [Installing](#installing)
+     - [Configuring](#configuring)
+     - [Docker](#docker)
+     - [Render](#render)
+     - [Running](#running)
+3. [Setting Your Java Spring Boot Server](#setting-your-java-spring-boot-server)
+   - [If You Are Pulling This Whole Project to Use](#if-you-are-pulling-this-whole-project-to-use)
+   - [If You Are Building From Scratch](#if-you-are-building-from-scratch)
+     - [Packages Used](#packages-used)
+     - [Documentation](#documentation)
+4. [Links](#links)
 # SETUP guide
 ## A few words
 - **Hi there**, this is a small project to help you get familiar with setting **NGINX** to make it a rtmp livestreaming server and code to run it in the backend of your website
@@ -5,13 +22,15 @@
 ### Project information
 - **Java Spring Boot** for backend server
 - **NGINX** on **Ubuntu** (I'm using Ubuntu 22.04 for this project) or any Unix-base operating system that support NGINX 
-> Author: **KaygV**
+> Author: **KayGV**
 
 ## Setting your NGINX server
 - Here i'm following a guide from **DigitalOcean** (Source: [DigitalOcean Guide](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-video-streaming-server-using-nginx-rtmp-on-ubuntu-20-04)) with some tweeks for rtmp streaming
 ### Installing and Configuring Nginx-RTMP
 #### Installing
 - Most of the time Nginx RTMP modules does not come along with Nginx but from Ubuntu 22.04 you can install it as a additional package 
+- In this project I'm building my Nginx from its source code with additional dependencies (RTMP)
+
 ```bash
 sudo apt update
 sudo apt install build-essential libpcre3 libpcre3-dev zlib1g zlib1g-dev libssl-dev libgeoip-dev libxslt1-dev libgd-dev libperl-dev libaio-dev libxml2-dev libexpat1-dev libmailutils-dev
@@ -63,6 +82,7 @@ rtmp {
 . . .
 http {
         server {
+                <!-- Can use port 80 or 443 to use http/https -->
                 listen 8088;
 
                 location /hls {
@@ -158,6 +178,6 @@ Java Spring Boot
 Nginx with RTMP
 PostgreSQL
 Docker
-Links:
-Source code: https://github.com/KayGV25/UIT_BCU_SoftwareDesign
-Documentation: https://kaygv25.github.io/CSBU-Software-Design-Back-End-Doc/
+- Links:
+  - Source code: [Github source code](https://github.com/KayGV25/UIT_BCU_SoftwareDesign)
+  - Documentation: [Java Documentaion](https://kaygv25.github.io/CSBU-Software-Design-Back-End-Doc/)
