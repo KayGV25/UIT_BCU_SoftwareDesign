@@ -41,10 +41,19 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
         // Extract the Authorization header
         String authHeader = request.getHeader("Authorization");
+        String token="";
+        if(authHeader != null && !authHeader.isBlank() && authHeader.startsWith("Bearer ")){
+            token = authHeader.substring(7); // Extract token after "Bearer "
+        }
 
         // Ensure the filter is only applied to "/auth/" paths
         String requestURI = request.getRequestURI();
         if (!requestURI.contains("/auth/")) {
+            if(!token.isBlank() && !JWTUtil.validateToken(token)){
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Unauthorized: Invalid token");
+                return;
+            }
             filterChain.doFilter(request, response);
             return; // Skip filtering for other paths
         }
@@ -55,7 +64,6 @@ public class JWTAuthFilter extends OncePerRequestFilter {
             return;
         }
 
-        String token = authHeader.substring(7); // Extract token after "Bearer "
 
         // Validate the token
         if (!JWTUtil.validateToken(token)) {
