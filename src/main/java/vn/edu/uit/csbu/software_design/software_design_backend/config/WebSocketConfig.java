@@ -24,4 +24,13 @@ public class WebSocketConfig implements WebSocketConfigurer {
     public void registerWebSocketHandlers(@NonNull WebSocketHandlerRegistry registry) {
         registry.addHandler(new ChatHandler(), "/chat").setAllowedOrigins("*");
     }
+
+    /**
+     * Instantiates a new Web socket config.
+     */
+// The `public WebSocketConfig(){}` is a default constructor for the `WebSocketConfig` class. In
+    // this case, it is an empty constructor that does not contain any specific logic or initialization
+    // code. It is often used when no additional initialization is needed for an object of this class.
+    public WebSocketConfig(){
+    }
 }

@@ -104,6 +104,23 @@ public class accountController {
     }
 
     /**
+     * This Java function retrieves the follower count for a user account using the provided
+     * authorization token.
+     * 
+     * @param token The `token` parameter in the `getFollowerCount` method is a string that represents
+     * the authorization token passed in the request header. This token is used for authentication and
+     * authorization purposes to ensure that the user making the request is allowed to access the
+     * follower count information.
+     * @return The method `getFollowerCount` in the controller class is returning a `ResponseEntity`
+     * object containing an `accountResponseDTO` object.
+     */
+    @GetMapping("/auth/follower")
+    public ResponseEntity<accountResponseDTO> getFollowerCount(@RequestHeader("Authorization") String token) throws NoSuchAlgorithmException {
+        return accountService.getFollower(token);
+    }
+    
+
+    /**
      * Retrieves the stream key for the authenticated user.
      *
      * @param token the authorization token provided in the request header

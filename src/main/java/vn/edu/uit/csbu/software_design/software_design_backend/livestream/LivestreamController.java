@@ -185,12 +185,12 @@ public class LivestreamController {
         return livestreamService.getCurrentStreaming(page, streamServerIp);
     }
 
+
     /**
-     * The function `validateSteamKey` validates a stream key received in the request body and returns
-     * a response indicating whether the key is valid or not.
+     * Validate steam key response entity.
      *
-     * @param rtmpBody The `rtmpBody` parameter in the `validateSteamKey` method is of type `MultiValueMap<String, String>`. It is used to accept a map of key-value pairs in the request body when the endpoint `/validate` is accessed via a POST request. The method is expecting the
-     * @return The method `validateSteamKey` is returning a `ResponseEntity<String>`. If the stream key provided in the request body is valid, it returns a response with status code 200 (OK) and the message "Valid stream key". If the stream key is invalid, it returns a response with status code 403 (Forbidden) and the message "Invalid stream key".
+     * @param rtmpBody the rtmp body
+     * @return the response entity
      */
     @PostMapping("/validate")
     public ResponseEntity<String> validateSteamKey(@RequestBody MultiValueMap<String, String> rtmpBody) {
@@ -200,7 +200,6 @@ public class LivestreamController {
             // System.out.println("ok");
             return ResponseEntity.ok("Valid stream key");
         }
-        
         return ResponseEntity.status(403).body("Invalid stream key");
     }
 }

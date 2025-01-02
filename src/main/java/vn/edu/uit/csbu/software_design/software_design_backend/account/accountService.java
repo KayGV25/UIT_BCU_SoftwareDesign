@@ -170,7 +170,24 @@ public class accountService {
             return ResponseEntity.status(HttpStatus.OK).body(new accountResponseDTO(followingList, null, accountResponseType.DATA));
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new accountResponseDTO("No Account Found", null, accountResponseType.RESPONSE));
+    }
 
+    /**
+     * The function `getFollower` retrieves follower information for an account based on a provided
+     * token.
+     * 
+     * @param token A token used for authentication and authorization purposes.
+     * @return The method `getFollower` is returning a `ResponseEntity` object with a generic type of
+     * `accountResponseDTO`. The response entity contains either a successful response with HTTP status
+     * OK and a body containing the follower count retrieved from the database, or a bad request
+     * response with a message indicating that no account was found.
+     */
+    ResponseEntity<accountResponseDTO> getFollower(String token) throws NoSuchAlgorithmException{
+        Optional<accountModel> dbAccount = getAccountToken(token);
+        if(dbAccount.isPresent()){
+            return ResponseEntity.status(HttpStatus.OK).body(new accountResponseDTO(dbAccount.get().getFollowerCount().toString(), null, accountResponseType.DATA));
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new accountResponseDTO("No Account Found", null, accountResponseType.RESPONSE));
     }
 
     /**

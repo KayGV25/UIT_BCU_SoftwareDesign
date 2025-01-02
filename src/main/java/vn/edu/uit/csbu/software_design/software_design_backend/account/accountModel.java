@@ -46,6 +46,9 @@ public class accountModel {
     @OneToMany(mappedBy = "accountId")
     private Set<followingModel> following;
 
+    @OneToMany(mappedBy = "streamerId")
+    private Set<followingModel> follower;
+
     /**
      * Get id string.
      *
@@ -166,6 +169,18 @@ public class accountModel {
             followingStreamId.add(f.getStreamerId());
         }
         return followingStreamId;
+    }
+
+    /**
+     * The function `getFollowerCount` returns the size of a collection named `follower` while being
+     * ignored during serialization.
+     * 
+     * @return The `follower.size()` is being returned, which represents the number of elements in the
+     * `follower` collection.
+     */
+    @JsonIgnore
+    public Integer getFollowerCount(){
+        return follower.size();
     }
 
     /**

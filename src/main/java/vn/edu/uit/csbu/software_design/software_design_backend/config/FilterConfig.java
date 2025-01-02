@@ -28,4 +28,10 @@ public class FilterConfig {
         registrationBean.setOrder(1); // Set filter order
         return registrationBean;
     }
+
+    /**
+     * Instantiates a new Filter config.
+     */
+    public FilterConfig() {
+    }
 }
