@@ -25,7 +25,21 @@ public class FilterConfig {
         FilterRegistrationBean<JWTAuthFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new JWTAuthFilter());
         registrationBean.addUrlPatterns("/auth/*"); // Apply filter only to specific paths
-        registrationBean.setOrder(1); // Set filter order
+        registrationBean.setOrder(2); // Set filter order
+        return registrationBean;
+    }
+
+    /**
+     * Cors filter filter registration bean.
+     *
+     * @return the filter registration bean
+     */
+    @Bean
+    public FilterRegistrationBean<CorsFilterConfig> corsFilter() {
+        FilterRegistrationBean<CorsFilterConfig> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new CorsFilterConfig());
+        registrationBean.addUrlPatterns("/*");  // Apply to all paths
+        registrationBean.setOrder(1);  // Ensure it runs before the JWT filter
         return registrationBean;
     }
 
