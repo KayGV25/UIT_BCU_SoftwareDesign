@@ -166,7 +166,7 @@ public class accountController {
      * @return Response Entity with the status of the follow or unfollow operation
      * @throws NoSuchAlgorithmException if a required hashing algorithm is unavailable
      */
-    @PutMapping("/auth/follow/streamId")
+    @PutMapping("/auth/follow/{streamId}")
     public ResponseEntity<String> follow(@PathVariable String streamId, @RequestBody accountRequest account) throws NoSuchAlgorithmException{
         if(Security.containsSQLInjection(account.name()) || Security.containsSQLInjection(account.password())){
             return ResponseEntity.badRequest().body(null);
