@@ -162,8 +162,7 @@ public class accountService {
         if(dbAccount.isPresent()){
             ArrayList<accountModel> followingList = new ArrayList<>();
             for(String id:dbAccount.get().getFollowingStreamId()){
-                System.out.println(id);
-                Optional<accountModel> following = accountRepository.findByName(id);
+                Optional<accountModel> following = accountRepository.findById(id);
                 if(following.isPresent()){
                     followingList.add(following.get());
                 }
