@@ -119,9 +119,9 @@ public class accountController {
     public ResponseEntity<String> follow(
             @Parameter(description = "The stream ID to follow or unfollow.") 
             @PathVariable String streamId, 
-            @Parameter(description = "Account credentials including username and password. Must not contain SQL injection patterns.") 
+            @Parameter(description = "Account credentials including username. Must not contain SQL injection patterns.") 
             @RequestBody accountRequest account) throws NoSuchAlgorithmException {
-        if (Security.containsSQLInjection(account.name()) || Security.containsSQLInjection(account.password())) {
+        if (Security.containsSQLInjection(account.name())) {
             return ResponseEntity.badRequest().body(null);
         }
         return accountService.addToFollowing(account, streamId);

@@ -162,7 +162,8 @@ public class accountService {
         if(dbAccount.isPresent()){
             ArrayList<accountModel> followingList = new ArrayList<>();
             for(String id:dbAccount.get().getFollowingStreamId()){
-                Optional<accountModel> following = accountRepository.findById(id);
+                System.out.println(id);
+                Optional<accountModel> following = accountRepository.findByName(id);
                 if(following.isPresent()){
                     followingList.add(following.get());
                 }
@@ -202,16 +203,12 @@ public class accountService {
     ResponseEntity<String> addToFollowing(accountRequest account, String streamId) throws NoSuchAlgorithmException {
         Optional<accountModel> dbAccount = getAccount(account.name());
         if(dbAccount.isPresent()){
-            String reqPassHashed = security.toHexString(security.getSHA(account.name()+account.password()+secret));
-            if(reqPassHashed.equals(dbAccount.get().getPassword())){
-                if(!followingRepository.existsByStreamerId(streamId)){
-                    followingRepository.save(new followingModel(dbAccount.get().getId(), streamId));
-                    return ResponseEntity.ok("Followed");
-                }
-                followingRepository.delete(new followingModel(dbAccount.get().getId(),streamId));
-                return ResponseEntity.ok("Unfollowed");
+            if(!followingRepository.existsByStreamerId(streamId)){
+                followingRepository.save(new followingModel(dbAccount.get().getId(), streamId));
+                return ResponseEntity.ok("Followed");
             }
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Wrong password");
+            followingRepository.delete(new followingModel(dbAccount.get().getId(),streamId));
+            return ResponseEntity.ok("Unfollowed");
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No account found");
     }
