@@ -182,8 +182,8 @@ public class accountService {
      * OK and a body containing the follower count retrieved from the database, or a bad request
      * response with a message indicating that no account was found.
      */
-    ResponseEntity<accountResponseDTO> getFollower(String token) throws NoSuchAlgorithmException{
-        Optional<accountModel> dbAccount = getAccountToken(token);
+    ResponseEntity<accountResponseDTO> getFollower(String streamId) throws NoSuchAlgorithmException{
+        Optional<accountModel> dbAccount = accountRepository.findById(streamId);
         if(dbAccount.isPresent()){
             return ResponseEntity.status(HttpStatus.OK).body(new accountResponseDTO(dbAccount.get().getFollowerCount().toString(), null, accountResponseType.DATA));
         }
