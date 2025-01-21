@@ -130,7 +130,7 @@ ngrok http --hostname=marmoset-unbiased-logically.ngrok-free.app 80 --scheme htt
 docker build -t csbu_software_design_2024 .
 # docker build -t <Image name> .
 docker login
-docker tag csbu_software_design_2024 kaygv/csbu_software_design_2024:latest 
+docker tag csbu_software_design_2024 kaygv/csbu_software_design_2024:latest
 # docker tag <Image name> <DockerHub Username>/<Image name>:<tag> 
 ```
 #### Render
@@ -180,4 +180,5 @@ PostgreSQL
 Docker
 - Links:
   - Source code: [Github source code](https://github.com/KayGV25/UIT_BCU_SoftwareDesign)
-  - Documentation: [Java Documentaion](https://kaygv25.github.io/CSBU-Software-Design-Back-End-Doc/)
+  - Javadoc Documentation: [Java Documentaion](https://kaygv25.github.io/CSBU-Software-Design-Back-End-Doc/)
+  - Rest API Documentation: [Swagger UI](https://csbu-software-design-be.onrender.com/swagger-ui/index.html#/)

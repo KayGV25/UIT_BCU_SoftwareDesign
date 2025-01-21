@@ -43,7 +43,9 @@ public class JWTAuthFilter extends OncePerRequestFilter {
             response.setStatus(HttpServletResponse.SC_OK);
             return;
         }
-
+        
+        String requestURI = request.getRequestURI();
+        
         // Extract the Authorization header
         String authHeader = request.getHeader("Authorization");
         String token="";
@@ -52,7 +54,6 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         }
 
         // Ensure the filter is only applied to "/auth/" paths
-        String requestURI = request.getRequestURI();
         if (!requestURI.contains("/auth/")) {
             if(!token.isBlank() && !JWTUtil.validateToken(token)){
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
