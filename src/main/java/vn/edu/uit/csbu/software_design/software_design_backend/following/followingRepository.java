@@ -14,7 +14,7 @@ public interface followingRepository extends JpaRepository<followingModel, Strin
      * @param StreamId the stream id
      * @return the boolean
      */
-    Boolean existsByStreamerId(String StreamId);
+    Boolean existsByAccountIdAndStreamerId(String accountId, String StreamId);
 
     /**
      * Delete all by account id.

@@ -202,7 +202,7 @@ public class accountService {
     ResponseEntity<String> addToFollowing(accountRequest account, String streamId) throws NoSuchAlgorithmException {
         Optional<accountModel> dbAccount = getAccount(account.name());
         if(dbAccount.isPresent()){
-            if(!followingRepository.existsByStreamerId(streamId)){
+            if(!followingRepository.existsByAccountIdAndStreamerId(dbAccount.get().getId(), streamId)){
                 followingRepository.save(new followingModel(dbAccount.get().getId(), streamId));
                 return ResponseEntity.ok("Followed");
             }
