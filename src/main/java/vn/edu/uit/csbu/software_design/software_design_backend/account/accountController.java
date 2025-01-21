@@ -72,12 +72,11 @@ public class accountController {
     }
 
     @Operation(summary = "Retrieve the follower count of the authenticated user", description = "Fetches the count of followers for the authenticated user.")
-    @GetMapping("/auth/follower/{streamId}")
+    @GetMapping("/follower/{streamId}")
     public ResponseEntity<accountResponseDTO> getFollowerCount(
             @Parameter(description = "The stream ID to get the follower count.") 
-            @PathVariable String streamId,
-            @Parameter(description = "The authorization token provided in the request header.") 
-            @RequestHeader("Authorization") String token) throws NoSuchAlgorithmException {
+            @PathVariable String streamId
+            ) throws NoSuchAlgorithmException {
         return accountService.getFollower(streamId);
     }
 
