@@ -128,6 +128,17 @@ public class accountController {
         return accountService.addToFollowing(account, streamId);
     }
 
+    @Operation(summary = "Retrieve the stream key for the authenticated user", description = "Fetches the stream key of the authenticated user.")
+    @GetMapping("/auth/isfollowing/{streamId}")
+    public ResponseEntity<accountResponseDTO> isFollowing(
+        @Parameter(description = "The authorization token provided in the request header.") 
+        @RequestHeader("Authorization") String token,
+        @Parameter(description = "The stream ID to check is following.") 
+        @PathVariable String streamId
+    ) throws NoSuchAlgorithmException{
+        return accountService.isFollowing(token, streamId);
+    }
+
     @Operation(summary = "Delete the authenticated user's account", description = "Deletes the authenticated user's account.")
     @DeleteMapping("/auth/delete")
     public ResponseEntity<accountResponseDTO> delete(

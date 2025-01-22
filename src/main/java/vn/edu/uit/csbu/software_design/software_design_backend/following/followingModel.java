@@ -1,7 +1,11 @@
 package vn.edu.uit.csbu.software_design.software_design_backend.following;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -12,6 +16,11 @@ import jakarta.persistence.Table;
 @Table(name = "following", schema = "public")
 public class followingModel {
     @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
+    private Integer id;
+
     @Column(name = "account_id")
     private String accountId;
 

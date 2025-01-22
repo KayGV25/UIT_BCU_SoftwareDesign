@@ -175,12 +175,10 @@ public class accountService {
     /**
      * The function `getFollower` retrieves follower information for an account based on a provided
      * token.
-     * 
-     * @param token A token used for authentication and authorization purposes.
-     * @return The method `getFollower` is returning a `ResponseEntity` object with a generic type of
-     * `accountResponseDTO`. The response entity contains either a successful response with HTTP status
-     * OK and a body containing the follower count retrieved from the database, or a bad request
-     * response with a message indicating that no account was found.
+     *
+     * @param streamId the stream id
+     * @return The method `getFollower` is returning a `ResponseEntity` object with a generic type of `accountResponseDTO`. The response entity contains either a successful response with HTTP status OK and a body containing the follower count retrieved from the database, or a bad request response with a message indicating that no account was found.
+     * @throws NoSuchAlgorithmException the no such algorithm exception
      */
     ResponseEntity<accountResponseDTO> getFollower(String streamId) throws NoSuchAlgorithmException{
         Optional<accountModel> dbAccount = accountRepository.findById(streamId);
@@ -191,6 +189,24 @@ public class accountService {
     }
 
     /**
+     * Is following response entity.
+     *
+     * @param token    the token
+     * @param streamId the stream id
+     * @return the response entity
+     * @throws NoSuchAlgorithmException the no such algorithm exception
+     */
+    ResponseEntity<accountResponseDTO> isFollowing(String token, String streamId) throws NoSuchAlgorithmException{
+        Optional<accountModel> dbAccount = getAccountToken(token);
+        if(dbAccount.isPresent()){
+            return ResponseEntity.status(HttpStatus.OK).body(new accountResponseDTO(followingRepository.existsByAccountIdAndStreamerId(dbAccount.get().getId(), streamId).toString() , null, accountResponseType.DATA));
+
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new accountResponseDTO("No Account Found", null, accountResponseType.RESPONSE));
+    }
+
+
+    /**
      * This Java function adds or removes a streamer from a user's following list based on
      * authentication and returns a corresponding response.
      *
@@ -199,15 +215,22 @@ public class accountService {
      * @return The method `addToFollowing` returns a `ResponseEntity<String>`. The method checks if the account exists in the database, verifies the password, and then either adds or removes a streamer from the following list. The method returns a response entity with a message indicating whether the streamer was followed or unfollowed, or if there was an issue such as a wrong password or no account found.
      * @throws NoSuchAlgorithmException the no such algorithm exception
      */
-    ResponseEntity<String> addToFollowing(accountRequest account, String streamId) throws NoSuchAlgorithmException {
+    public ResponseEntity<String> addToFollowing(accountRequest account, String streamId) throws NoSuchAlgorithmException {
         Optional<accountModel> dbAccount = getAccount(account.name());
-        if(dbAccount.isPresent()){
-            if(!followingRepository.existsByAccountIdAndStreamerId(dbAccount.get().getId(), streamId)){
-                followingRepository.save(new followingModel(dbAccount.get().getId(), streamId));
+        if (dbAccount.isPresent()) {
+            String accountId = dbAccount.get().getId();
+            
+            // Check if the account already follows the given streamer
+            boolean alreadyFollowing = followingRepository.existsByAccountIdAndStreamerId(accountId, streamId);
+            if (!alreadyFollowing) {
+                // If not following, add a new follow record
+                followingRepository.save(new followingModel(accountId, streamId));
                 return ResponseEntity.ok("Followed");
+            } else {
+                // If already following, unfollow (remove) the streamer
+                followingRepository.deleteByAccountIdAndStreamerId(accountId, streamId);
+                return ResponseEntity.ok("Unfollowed");
             }
-            followingRepository.delete(new followingModel(dbAccount.get().getId(),streamId));
-            return ResponseEntity.ok("Unfollowed");
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No account found");
     }

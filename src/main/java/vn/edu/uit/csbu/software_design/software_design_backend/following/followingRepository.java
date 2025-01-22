@@ -7,11 +7,12 @@ import org.springframework.stereotype.Repository;
  * The interface Following repository.
  */
 @Repository
-public interface followingRepository extends JpaRepository<followingModel, String>{
+public interface followingRepository extends JpaRepository<followingModel, Integer>{
     /**
      * Exists by streamer id boolean.
      *
-     * @param StreamId the stream id
+     * @param accountId the account id
+     * @param StreamId  the stream id
      * @return the boolean
      */
     Boolean existsByAccountIdAndStreamerId(String accountId, String StreamId);
@@ -22,4 +23,12 @@ public interface followingRepository extends JpaRepository<followingModel, Strin
      * @param streamerId the streamer id
      */
     void deleteAllByAccountId(String streamerId);
+
+    /**
+     * Delete by account id and streamer id.
+     *
+     * @param accountId the account id
+     * @param StreamId  the stream id
+     */
+    void deleteByAccountIdAndStreamerId(String accountId, String StreamId);
 }
