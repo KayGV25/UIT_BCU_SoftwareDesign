@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import vn.edu.uit.csbu.software_design.software_design_backend.Security;
 import vn.edu.uit.csbu.software_design.software_design_backend.following.followingModel;
@@ -215,6 +216,7 @@ public class accountService {
      * @return The method `addToFollowing` returns a `ResponseEntity<String>`. The method checks if the account exists in the database, verifies the password, and then either adds or removes a streamer from the following list. The method returns a response entity with a message indicating whether the streamer was followed or unfollowed, or if there was an issue such as a wrong password or no account found.
      * @throws NoSuchAlgorithmException the no such algorithm exception
      */
+    @Transactional
     public ResponseEntity<String> addToFollowing(accountRequest account, String streamId) throws NoSuchAlgorithmException {
         Optional<accountModel> dbAccount = getAccount(account.name());
         if (dbAccount.isPresent()) {
